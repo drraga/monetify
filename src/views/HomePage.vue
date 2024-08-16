@@ -1,4 +1,5 @@
 <script setup lang="ts">
+import getImgURL from '@/composables/getImgURL'
 const links = [
   {
     id: 1,
@@ -17,10 +18,6 @@ const links = [
     url: '#'
   }
 ]
-
-const getImgURL = (name: string) => {
-  return new URL(name, import.meta.url).href
-}
 </script>
 
 <template>
