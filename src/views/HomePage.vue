@@ -1,5 +1,8 @@
 <script setup lang="ts">
+import TheFooter from '@/components/TheFooter.vue'
+
 import getImgURL from '@/composables/getImgURL'
+
 const links = [
   {
     id: 1,
@@ -21,29 +24,34 @@ const links = [
 </script>
 
 <template>
-  <main class="page-home">
-    <div class="page-home__wrapper">
-      <div class="page-home__legend">
-        <h1>The expense management app that does it all, for every business.</h1>
+  <div class="page-home">
+    <main>
+      <div class="page-home__wrapper">
+        <div class="page-home__legend">
+          <h1>The expense management app that does it all, for every business.</h1>
 
-        <div class="page-home__legend-features">
-          <a v-for="card in links" :key="card.id" :href="card.url">
-            <img :src="getImgURL(card.svg)" :alt="card.alt" />
+          <div class="page-home__legend-features">
+            <a v-for="card in links" :key="card.id" :href="card.url">
+              <img :src="getImgURL(card.svg)" :alt="card.alt" />
 
-            <p>
-              {{ card.textFirstLine }}
-              <br />
-              {{ card.textSecondLine }}
-            </p>
-          </a>
+              <p>
+                {{ card.textFirstLine }}
+                <br />
+                {{ card.textSecondLine }}
+              </p>
+            </a>
+          </div>
+
+          <p>
+            Save yourself, you team, and your company time and money. Get started with Monetify
+            today.
+          </p>
         </div>
-
-        <p>
-          Save yourself, you team, and your company time and money. Get started with Monetify today.
-        </p>
       </div>
-    </div>
-  </main>
+    </main>
+
+    <TheFooter />
+  </div>
 </template>
 
 <style lang="scss">
@@ -52,10 +60,10 @@ const links = [
 
 .page-home {
   position: relative;
+  margin: 0 0 0 pxToRem(375);
   height: 100%;
 
   &__wrapper {
-    margin-inline-start: pxToRem(375);
     padding: pxToRem(40);
   }
 
