@@ -81,6 +81,11 @@ footer {
       font-size: pxToRem(15);
       text-decoration: none;
       color: #000;
+      transition: color 0.35s ease;
+
+      &:hover {
+        color: getcolor('blue.base');
+      }
     }
 
     & li:not(:last-child) {

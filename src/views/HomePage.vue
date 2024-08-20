@@ -1,5 +1,6 @@
 <script setup lang="ts">
 import TheFooter from '@/components/TheFooter.vue'
+import VLogin from '@/components/VLogin.vue'
 
 import getImgURL from '@/composables/getImgURL'
 
@@ -25,32 +26,38 @@ const links = [
 
 <template>
   <div class="page-home">
-    <main>
-      <div class="page-home__wrapper">
-        <div class="page-home__legend">
-          <h1>The expense management app that does it all, for every business.</h1>
+    <div class="login-section">
+      <VLogin />
+    </div>
 
-          <div class="page-home__legend-features">
-            <a v-for="card in links" :key="card.id" :href="card.url">
-              <img :src="getImgURL(card.svg)" :alt="card.alt" />
+    <div class="page-home__background-wrapper">
+      <main>
+        <div class="page-home__wrapper">
+          <div class="page-home__legend">
+            <h1>The expense management app that does it all, for every business.</h1>
 
-              <p>
-                {{ card.textFirstLine }}
-                <br />
-                {{ card.textSecondLine }}
-              </p>
-            </a>
+            <div class="page-home__legend-features">
+              <a v-for="card in links" :key="card.id" :href="card.url">
+                <img :src="getImgURL(card.svg)" :alt="card.alt" />
+
+                <p>
+                  {{ card.textFirstLine }}
+                  <br />
+                  {{ card.textSecondLine }}
+                </p>
+              </a>
+            </div>
+
+            <p>
+              Save yourself, you team, and your company time and money. Get started with Monetify
+              today.
+            </p>
           </div>
-
-          <p>
-            Save yourself, you team, and your company time and money. Get started with Monetify
-            today.
-          </p>
         </div>
-      </div>
-    </main>
+      </main>
 
-    <TheFooter />
+      <TheFooter />
+    </div>
   </div>
 </template>
 
@@ -59,12 +66,21 @@ const links = [
 @import '@/assets/styles/_variables';
 
 .page-home {
-  position: relative;
-  margin: 0 0 0 pxToRem(375);
-  height: 100%;
+  .login-section {
+    position: fixed;
+    left: 0;
+    top: 0;
+    bottom: 0;
+    block-size: 100vh;
+  }
+
+  &__background-wrapper {
+    margin: 0 0 0 pxToRem(375);
+  }
 
   &__wrapper {
     padding: pxToRem(40);
+    block-size: 100vh;
   }
 
   &__legend {
@@ -77,7 +93,7 @@ const links = [
     color: #fff;
     text-wrap: balance;
     text-align: center;
-    min-block-size: pxToRem(580);
+    block-size: 100%;
   }
 
   &__legend h1 {
