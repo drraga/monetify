@@ -1,6 +1,6 @@
 import { createRouter, createWebHistory } from 'vue-router'
-// import Homepage from '@/views/HomePage.vue'
 import HomePage from '@/views/HomePage.vue'
+// import ExpensesPage from '@/views/ExpensesPage.vue'
 
 // TODO delete unnecessary imports
 
@@ -11,6 +11,11 @@ const router = createRouter({
       path: '/',
       name: 'home',
       component: HomePage
+    },
+    {
+      path: '/expenses',
+      name: 'expenses',
+      component: () => import('../views/ExpensesPage.vue')
     }
     // {
     //   path: '/about',
