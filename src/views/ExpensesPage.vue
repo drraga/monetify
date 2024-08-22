@@ -1,6 +1,8 @@
 <script setup lang="ts">
 import { ref } from 'vue'
 
+import CardAccount from '@/components/CardAccount.vue'
+
 const sidePaneElements = [
   {
     title: 'Dashboard',
@@ -13,6 +15,10 @@ const sidePaneElements = [
   {
     title: 'Transactions',
     svg: ''
+  },
+  {
+    title: 'Expenses',
+    svg: ''
   }
 ]
 
@@ -23,10 +29,12 @@ const currencies = {
   RUB: '₽',
   USD: '$'
 }
+
 const totalBalance = ref({
   amount: 200000,
   currency: 'RUB'
 })
+
 const expenses = ref([
   {
     date: '',
@@ -77,9 +85,10 @@ const expenses = ref([
         </div>
 
         <div class="accounts-total">
-          <div class="account">
-            <h3>Your balance:</h3>
-            <p>{{ totalBalance.amount }} {{ currencies[totalBalance.currency] }}</p>
+          <div class="accounts-total__wrapper">
+            <template v-for="(_, index) in 1" :key="index">
+              <CardAccount class="accounts-total__card" />
+            </template>
           </div>
         </div>
 
@@ -104,8 +113,8 @@ const expenses = ref([
 }
 
 .content-wrapper {
-  margin: 0 0 0 230px;
-  padding: 20px;
+  margin: 0 0 0 pxToRem(230);
+  padding: pxToRem(20);
 }
 
 .content-header {
@@ -116,6 +125,7 @@ const expenses = ref([
   border-bottom: solid 1px #ebe6df;
   font-size: pxToRem(26);
   padding: 0 0 pxToRem(20);
+  margin: 0 0 pxToRem(20);
 
   &__entry-toggle {
     font-family: inherit;
@@ -143,6 +153,7 @@ const expenses = ref([
   width: calc(100vi - pxToRem(230));
   height: 100vh;
 }
+
 .content__modal-wrapper {
   padding: 20px;
   background: aqua;
@@ -151,8 +162,21 @@ const expenses = ref([
 }
 
 .accounts-total {
-  &::after {
-    border-bottom: 1px solid #ebe6df;
+  overflow: hidden;
+  border-radius: pxToRem(5);
+  margin: 0 0 pxToRem(20);
+
+  &__wrapper {
+    display: flex;
+    gap: pxToRem(6);
+    overflow: hidden;
+    overflow-x: auto;
+    padding: 0 0 pxToRem(20);
+    margin: 0 0 pxToRem(-20);
+  }
+
+  &__card {
+    flex: 0 0 pxToRem(250);
   }
 }
 </style>
