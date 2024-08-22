@@ -1,8 +1,8 @@
 * {
   box-sizing: border-box;
   outline: 0;
-  -webkit-tap-highlight-color: transparent;
   -webkit-overflow-scrolling: touch;
+  -webkit-tap-highlight-color: transparent;
 }
 
 ::before,
@@ -80,12 +80,12 @@ time,
 mark,
 audio,
 video {
-  vertical-align: baseline;
   padding: 0;
-  font-size: 100%;
   border: 0;
-  background: transparent;
   margin: 0;
+  background: transparent;
+  font-size: 100%;
+  vertical-align: baseline;
 }
 
 main,
@@ -120,24 +120,24 @@ q::after {
 }
 
 a {
-  vertical-align: baseline;
   padding: 0;
-  font-size: 100%;
-  background: transparent;
   margin: 0;
+  background: transparent;
+  font-size: 100%;
+  vertical-align: baseline;
 }
 
 ins {
-  text-decoration: none;
-  color: #000;
   background-color: #ff9;
+  color: #000;
+  text-decoration: none;
 }
 
 mark {
-  font-weight: 700;
-  font-style: italic;
-  color: #000;
   background-color: #ff9;
+  color: #000;
+  font-style: italic;
+  font-weight: 700;
 }
 
 del {
@@ -152,8 +152,8 @@ dfn[title] {
 
 table {
   width: 100%;
-  border-spacing: 0;
   border-collapse: collapse;
+  border-spacing: 0;
 }
 
 hr {

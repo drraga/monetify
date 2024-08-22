@@ -1,33 +1,33 @@
 @import '@/assets/styles/reset';
 
 @font-face {
-  font-family: 'Poppins';
-  src: url('@/public/fonts/Poppins-Regular.woff2') format('woff2');
+  font-family: Poppins;
+  font-style: normal;
   font-weight: 400;
-  font-style: normal;
+  src: url('@/public/fonts/Poppins-Regular.woff2') format('woff2');
 }
 
 @font-face {
-  font-family: 'Poppins';
-  src: url('@/public/fonts/Poppinns-Medium.woff2') format('woff2');
-  font-weight: 500;
+  font-family: Poppins;
   font-style: 'medium';
+  font-weight: 500;
+  src: url('@/public/fonts/Poppinns-Medium.woff2') format('woff2');
 }
 
 @font-face {
-  font-family: 'Poppins';
-  src: url('@/public/fonts/Poppins-SemiBold.woff2') format('woff2');
+  font-family: Poppins;
+  font-style: normal;
   font-weight: 600;
-  font-style: normal;
+  src: url('@/public/fonts/Poppins-SemiBold.woff2') format('woff2');
 }
 
 @font-face {
-  font-family: 'Poppins';
-  src: url('@/public/fonts/Poppins-Bold.woff2') format('woff2');
-  font-weight: 700;
+  font-family: Poppins;
   font-style: normal;
+  font-weight: 700;
+  src: url('@/public/fonts/Poppins-Bold.woff2') format('woff2');
 }
 
 body {
-  font-family: 'Poppins', sans-serif;
+  font-family: Poppins, sans-serif;
 }

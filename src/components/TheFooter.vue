@@ -56,31 +56,30 @@ const footerLinks = [
 @import '@/assets/styles/_variables';
 
 footer {
-  padding: pxToRem(64) pxToRem(32);
+  padding: pxtorem(64) pxtorem(32);
 
   & .column {
     display: grid;
+    margin: 0 0 pxtorem(40);
     grid-template-columns: repeat(auto-fit, minmax(178px, 1fr));
-    justify-content: center;
-    align-content: center;
-    margin: 0 0 pxToRem(40);
+    place-content: center center;
   }
 
   & .column-wrapper {
     padding: 1rem;
 
     & h4 {
-      font-size: pxToRem(17);
-      font-weight: 700;
       margin: 0 0 1rem;
       color: getcolor('green.lighten2');
+      font-size: pxtorem(17);
+      font-weight: 700;
     }
 
     & a {
-      padding: pxToRem(4) 0;
-      font-size: pxToRem(15);
-      text-decoration: none;
+      padding: pxtorem(4) 0;
       color: #000;
+      font-size: pxtorem(15);
+      text-decoration: none;
       transition: color 0.35s ease;
 
       &:hover {
@@ -89,7 +88,7 @@ footer {
     }
 
     & li:not(:last-child) {
-      margin: 0 0 pxToRem(8);
+      margin: 0 0 pxtorem(8);
     }
   }
 }

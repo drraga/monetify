@@ -35,35 +35,36 @@ import HTMLIconPen from '@/assets/icons/HTMLIconPen.vue'
 @import '@/assets/styles/_variables';
 
 .account {
-  padding: pxToRem(20);
+  padding: pxtorem(20);
+  border-radius: pxtorem(5);
   background: getcolor('grey.base');
-  border-radius: pxToRem(5);
   color: #fff;
 
   &__header {
     display: grid;
-    grid-template-columns: max-content max-content;
     justify-content: space-between;
+    grid-template-columns: max-content max-content;
 
     & i {
-      width: pxToRem(20);
-      height: pxToRem(20);
+      width: pxtorem(20);
+      height: pxtorem(20);
       cursor: pointer;
     }
   }
 
   & > p {
-    margin: 0 0 pxToRem(30);
+    margin: 0 0 pxtorem(30);
   }
 
   &__cash-flow {
     display: grid;
+    font-size: pxtorem(14);
+    gap: pxtorem(8);
     grid-template-columns: repeat(2, 1fr);
-    gap: pxToRem(8);
-    font-size: pxToRem(14);
 
     &--income {
       border-right: 1px dashed #fff;
+
       & span {
         color: getcolor('green.base');
       }

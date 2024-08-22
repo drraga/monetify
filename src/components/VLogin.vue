@@ -21,54 +21,54 @@ const connectionTypes = ['Email', 'Phone Number', 'Google', 'Apple']
 @import '@/assets/styles/_variables';
 
 .login {
-  block-size: 100%;
-  inline-size: pxToRem(375);
+  padding: 15vh pxtorem(48) 0;
   background: getcolor('green.darken2');
-  padding: 15vh pxToRem(48) 0;
+  block-size: 100%;
+  inline-size: pxtorem(375);
 
   & h2 {
-    font-size: pxToRem(32);
-    margin: 0 0 pxToRem(32);
+    margin: 0 0 pxtorem(32);
     color: getcolor('green.lighten2');
+    font-size: pxtorem(32);
   }
 
   & p {
-    font-size: pxToRem(15);
+    margin: 0 0 pxtorem(18);
     color: #fff;
-    margin: 0 0 pxToRem(18);
+    font-size: pxtorem(15);
     text-wrap: balance;
   }
 
   & ul {
     display: grid;
-    gap: pxToRem(15);
+    gap: pxtorem(15);
   }
 
   & button {
     position: relative;
-    font-size: pxToRem(15);
+    width: 100%;
+    padding: pxtorem(8) pxtorem(16);
+    border: none;
+    border-radius: pxtorem(44);
+    background-color: getcolor('green.darken3');
+    color: #fff;
+    cursor: pointer;
+    font-size: pxtorem(15);
     font-weight: 600;
     line-height: 2.4;
-    cursor: pointer;
-    border: none;
-    width: 100%;
     text-align: left;
-    border-radius: pxToRem(44);
-    padding: pxToRem(8) pxToRem(16);
-    background-color: getcolor('green.darken3');
     transition: background-color 0.5s ease;
-    color: #fff;
 
-    &:after {
+    &::after {
       position: absolute;
-      right: pxToRem(22);
+      right: pxtorem(22);
+      padding: pxtorem(4);
+      border-radius: pxtorem(1);
+      border-top: pxtorem(3) solid getcolor('green.lighten2');
+      border-right: pxtorem(3) solid getcolor('green.lighten2');
       content: '';
-      padding: pxToRem(4);
-      border-top: pxToRem(3) solid getcolor('green.lighten2');
-      border-right: pxToRem(3) solid getcolor('green.lighten2');
-      border-radius: pxToRem(1);
-      transform: rotate(45deg) translate3d(90%, 50%, 0);
       font-size: 1rem;
+      transform: rotate(45deg) translate3d(90%, 50%, 0);
     }
 
     &:hover {

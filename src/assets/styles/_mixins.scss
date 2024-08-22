@@ -18,6 +18,7 @@
 
 @function getcolor($str, $opacity: 1) {
   $color-array: string.split($str, '.');
+
   @if $opacity != 1 {
     @return color.change(
       map.get(map.get($colors, list.nth($color-array, 1)), list.nth($color-array, 2)),
@@ -28,15 +29,15 @@
   }
 }
 
-@function pxToRem($px) {
+@function pxtorem($px) {
   $rem: calc(round(($px / 16) * 1000) / 1000);
+
   @return #{$rem}rem;
 }
 
 @function calcClamp($minPx, $maxPx) {
-  $minRem: pxToRem($minPx);
-  $maxRem: pxToRem($maxPx);
-
+  $minRem: pxtorem($minPx);
+  $maxRem: pxtorem($maxPx);
   $reminderMidValue: calc(($maxPx - 8) * 100 / 1440);
   $reminderMidValueRounded: calc(round($reminderMidValue * 1000) / 1000);
 

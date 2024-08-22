@@ -107,34 +107,33 @@ const expenses = ref([
 .sidepane {
   position: fixed;
   left: 0;
-  block-size: 100vh;
-  inline-size: pxToRem(230);
   background-color: getcolor('green.darken2');
+  block-size: 100vh;
+  inline-size: pxtorem(230);
 }
 
 .content-wrapper {
-  margin: 0 0 0 pxToRem(230);
-  padding: pxToRem(20);
+  padding: pxtorem(20);
+  margin: 0 0 0 pxtorem(230);
 }
 
 .content-header {
   display: grid;
-  grid-template-columns: max-content max-content;
-  justify-content: space-between;
-  align-content: center;
+  padding: 0 0 pxtorem(20);
   border-bottom: solid 1px #ebe6df;
-  font-size: pxToRem(26);
-  padding: 0 0 pxToRem(20);
-  margin: 0 0 pxToRem(20);
+  margin: 0 0 pxtorem(20);
+  font-size: pxtorem(26);
+  grid-template-columns: max-content max-content;
+  place-content: center space-between;
 
   &__entry-toggle {
-    font-family: inherit;
-    padding: pxToRem(4) pxToRem(28) pxToRem(4) pxToRem(24);
+    padding: pxtorem(4) pxtorem(28) pxtorem(4) pxtorem(24);
     border: none;
-    border-radius: pxToRem(32);
-    cursor: pointer;
-    color: #fff;
+    border-radius: pxtorem(32);
     background: getcolor('green.lighten2');
+    color: #fff;
+    cursor: pointer;
+    font-family: inherit;
   }
 }
 
@@ -145,38 +144,38 @@ const expenses = ref([
 .content__modal {
   position: absolute;
   display: flex;
-  justify-content: center;
-  align-items: center;
-  background: gray;
-  opacity: 0.3;
-  inset: 0;
-  width: calc(100vi - pxToRem(230));
+  width: calc(100vi - pxtorem(230));
   height: 100vh;
+  align-items: center;
+  justify-content: center;
+  background: gray;
+  inset: 0;
+  opacity: 0.3;
 }
 
 .content__modal-wrapper {
-  padding: 20px;
-  background: aqua;
   width: 300px;
   height: 300px;
+  padding: 20px;
+  background: aqua;
 }
 
 .accounts-total {
   overflow: hidden;
-  border-radius: pxToRem(5);
-  margin: 0 0 pxToRem(20);
+  border-radius: pxtorem(5);
+  margin: 0 0 pxtorem(20);
 
   &__wrapper {
     display: flex;
-    gap: pxToRem(6);
     overflow: hidden;
+    padding: 0 0 pxtorem(20);
+    margin: 0 0 pxtorem(-20);
+    gap: pxtorem(6);
     overflow-x: auto;
-    padding: 0 0 pxToRem(20);
-    margin: 0 0 pxToRem(-20);
   }
 
   &__card {
-    flex: 0 0 pxToRem(250);
+    flex: 0 0 pxtorem(250);
   }
 }
 </style>
