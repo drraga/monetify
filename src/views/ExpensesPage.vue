@@ -1,7 +1,15 @@
 <script setup lang="ts">
 import { ref } from 'vue'
 
+import { storeToRefs } from 'pinia'
+import { useExpensesStore } from '@/stores/expenses'
+const expensesStore = useExpensesStore()
+const { selectedTransactionIds } = storeToRefs(expensesStore)
+const { deleteTransactions } = expensesStore
+
 import CardAccount from '@/components/CardAccount.vue'
+import ExpensList from '@/components/ExpensList.vue'
+import ButtonExpenseControl from '@/components/ButtonExpenseControl.vue'
 
 const sidePaneElements = [
   {
@@ -68,7 +76,19 @@ const expenses = ref([
     <div class="content-wrapper">
       <div class="content-header">
         <h1>Expenses</h1>
-        <button @click="toggleModal()" class="content-header__entry-toggle">Create expense</button>
+
+        <div class="content-header__actions">
+          <Transition name="slide">
+            <ButtonExpenseControl
+              v-if="selectedTransactionIds.length"
+              @click="deleteTransactions()"
+              button-text="Delete"
+              :is-red="true"
+            />
+          </Transition>
+
+          <ButtonExpenseControl @click="toggleModal()" button-text="Create expense" />
+        </div>
       </div>
 
       <div class="content__expense-list">
@@ -92,8 +112,10 @@ const expenses = ref([
           </div>
         </div>
 
-        <div>
+        <div class="expense-table">
           <h3>History</h3>
+
+          <ExpensList />
         </div>
       </div>
     </div>
@@ -126,14 +148,24 @@ const expenses = ref([
   grid-template-columns: max-content max-content;
   place-content: center space-between;
 
-  &__entry-toggle {
-    padding: pxtorem(4) pxtorem(28) pxtorem(4) pxtorem(24);
-    border: none;
-    border-radius: pxtorem(32);
-    background: getcolor('green.lighten2');
-    color: #fff;
-    cursor: pointer;
-    font-family: inherit;
+  &__actions {
+    display: flex;
+    gap: pxtorem(5);
+
+    & .slide-enter-active,
+    .slide-leave-active {
+      transition: all 0.3s ease-out;
+    }
+
+    & .slide-enter-from {
+      opacity: 0;
+      transform: translateY(30px);
+    }
+
+    & .slide-leave-to {
+      opacity: 0;
+      transform: translateY(-30px);
+    }
   }
 }
 
@@ -144,8 +176,10 @@ const expenses = ref([
 .content__modal {
   position: absolute;
   display: flex;
-  width: calc(100vi - pxtorem(230));
-  height: 100vh;
+
+  // width: calc(100vi - pxtorem(230));
+  // height: 100vh;
+  height: 100%;
   align-items: center;
   justify-content: center;
   background: gray;
@@ -176,6 +210,16 @@ const expenses = ref([
 
   &__card {
     flex: 0 0 pxtorem(250);
+  }
+}
+
+.expense-table {
+  padding: pxtorem(10);
+  background-color: getcolor('grey.lighten1');
+
+  & h3 {
+    margin: 0 0 pxtorem(16);
+    font-size: pxtorem(22);
   }
 }
 </style>
