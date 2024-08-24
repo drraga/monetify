@@ -63,7 +63,19 @@ export const useExpensesStore = defineStore('expenses', {
 
   getters: {
     getTransactionHistory: (state) => state.transactionHistory,
-    getSelectedTransactionIds: (state) => state.selectedTransactionIds
+    getSelectedTransactionIds: (state) => state.selectedTransactionIds,
+    getAllExpencesAmount: (state) =>
+      state.transactionHistory.reduce(
+        (acc, transaction) => (transaction.isExpense ? (acc += transaction.amount) : (acc += 0)),
+        0
+      ),
+    getAllIncome: (state) =>
+      state.transactionHistory.reduce(
+        (acc, transaction) => (!transaction.isExpense ? (acc += transaction.amount) : (acc += 0)),
+        0
+      ),
+    getAllBalance: (state) =>
+      state.transactionHistory.reduce((acc, transaction) => (acc += transaction.amount), 0)
   },
 
   actions: {

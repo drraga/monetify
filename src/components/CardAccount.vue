@@ -1,4 +1,9 @@
 <script setup lang="ts">
+import { storeToRefs } from 'pinia'
+import { useExpensesStore } from '@/stores/expenses'
+const expenseStore = useExpensesStore()
+const { getAllExpencesAmount, getAllIncome, getAllBalance } = storeToRefs(expenseStore)
+
 import HTMLIconPen from '@/assets/icons/HTMLIconPen.vue'
 </script>
 
@@ -12,19 +17,19 @@ import HTMLIconPen from '@/assets/icons/HTMLIconPen.vue'
       </i>
     </div>
 
-    <p>123 ₽</p>
+    <p>{{ getAllBalance }} ₽</p>
 
     <div class="account__cash-flow">
       <p class="account__cash-flow--income">
         Income
         <br />
-        <span>123 ₽</span>
+        <span>{{ getAllIncome }} ₽</span>
       </p>
 
       <p class="account__cash-flow--expense">
         Expense
         <br />
-        <span>345 ₽</span>
+        <span>{{ getAllExpencesAmount }} ₽</span>
       </p>
     </div>
   </div>
