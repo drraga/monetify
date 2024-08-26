@@ -8,8 +8,10 @@ const { selectedTransactionIds } = storeToRefs(expensesStore)
 const { deleteTransactions } = expensesStore
 
 import CardAccount from '@/components/CardAccount.vue'
-import ExpensList from '@/components/ExpensList.vue'
 import ButtonExpenseControl from '@/components/ButtonExpenseControl.vue'
+import ExpensList from '@/components/ExpensList.vue'
+
+import ModalTransaction from '@/components/ModalTransaction.vue'
 
 const sidePaneElements = [
   {
@@ -30,8 +32,35 @@ const sidePaneElements = [
   }
 ]
 
+const modalInputFields = [
+  {
+    fieldName: 'Merchant',
+    textType: 'text',
+    isRequired: true
+  },
+  {
+    fieldName: 'Date',
+    textType: 'date',
+    isRequired: true
+  },
+  {
+    fieldName: 'Amount',
+    textType: 'number',
+    isRequired: true
+  },
+  {
+    fieldName: 'Category',
+    textType: 'text',
+    isRequired: false
+  },
+  {
+    fieldName: 'Description',
+    textType: 'text',
+    isRequired: false
+  }
+]
+
 const isModalOpen = ref(false)
-const toggleModal = () => (isModalOpen.value = !isModalOpen.value)
 
 const currencies = {
   RUB: '₽',
@@ -87,22 +116,20 @@ const expenses = ref([
             />
           </Transition>
 
-          <ButtonExpenseControl @click="toggleModal()" button-text="Create expense" />
+          <ButtonExpenseControl @click="isModalOpen = true" button-text="Create expense" />
         </div>
       </div>
 
       <div class="content__expense-list">
-        <div v-if="isModalOpen" class="content__modal">
-          <div class="content__modal-wrapper">
-            <label for="">
-              <input type="text" />
-            </label>
-
-            <label for="">
-              <input type="text" />
-            </label>
-          </div>
-        </div>
+        <Teleport to="body">
+          <ModalTransaction
+            @close-dialog="(value: boolean) => (isModalOpen = value)"
+            :input-fields="modalInputFields"
+            :show-dialog="isModalOpen"
+          >
+            <template #header> Expenses </template>
+          </ModalTransaction>
+        </Teleport>
 
         <div class="accounts-total">
           <div class="accounts-total__wrapper">
@@ -171,27 +198,6 @@ const expenses = ref([
 
 .content__expense-list {
   position: relative;
-}
-
-.content__modal {
-  position: absolute;
-  display: flex;
-
-  // width: calc(100vi - pxtorem(230));
-  // height: 100vh;
-  height: 100%;
-  align-items: center;
-  justify-content: center;
-  background: gray;
-  inset: 0;
-  opacity: 0.3;
-}
-
-.content__modal-wrapper {
-  width: 300px;
-  height: 300px;
-  padding: 20px;
-  background: aqua;
 }
 
 .accounts-total {

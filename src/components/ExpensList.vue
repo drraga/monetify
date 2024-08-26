@@ -23,7 +23,14 @@ const handleSelectAll = () => {
   <table aria-label="expense list">
     <thead>
       <tr>
-        <input type="checkbox" @change="handleSelectAll()" v-model="isAllTransactionsSelected" />
+        <label for="selectAll">
+          <input
+            id="selectAll"
+            type="checkbox"
+            @change="handleSelectAll()"
+            v-model="isAllTransactionsSelected"
+          />
+        </label>
 
         <th v-for="header in tableHeaders" :key="header" :data-column-name="header">
           {{ header }}
@@ -34,7 +41,15 @@ const handleSelectAll = () => {
     <tbody>
       <template v-for="transaction in getTransactionHistory" :key="transaction.id">
         <tr :class="{ 'is-expence': transaction.isExpense }">
-          <input type="checkbox" :value="transaction.id" v-model="selectedTransactionIds" />
+          <label :for="transaction.id">
+            <input
+              :id="transaction.id"
+              type="checkbox"
+              :value="transaction.id"
+              :name="`transaction ${transaction.id}`"
+              v-model="selectedTransactionIds"
+            />
+          </label>
 
           <td v-for="(section, j) in tableHeaders" :key="j" :data-column-name="section">
             {{ transaction[section] }} <span v-if="section === 'amount'">₽</span>
@@ -58,8 +73,8 @@ table {
 
   & tr {
     display: grid;
-    padding: pxtorem(5) pxtorem(10);
-    gap: pxtorem(5);
+    padding: pxtorem(6) pxtorem(10);
+    gap: pxtorem(6);
 
     // grid-template-columns: repeat(5, 1fr);
     grid-template-columns: pxtorem(22) pxtorem(120) repeat(4, 1fr);
@@ -75,9 +90,14 @@ table {
     display: grid;
     gap: pxtorem(5);
 
+    &:hover > :not(:hover) {
+      opacity: 0.6;
+    }
+
     & > tr {
       border-right: 4px solid getcolor('green.base');
       background-color: #fff;
+      transition: opacity 0.25s ease-in-out;
 
       &.is-expence {
         border-right: 4px solid getcolor('red.base');

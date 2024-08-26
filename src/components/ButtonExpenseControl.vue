@@ -20,7 +20,7 @@ const props = defineProps({
 @import '@/assets/styles/_variables';
 
 .button-expense {
-  padding: pxtorem(4) pxtorem(28) pxtorem(4) pxtorem(24);
+  padding: pxtorem(4) pxtorem(20);
   border: none;
   border-radius: pxtorem(32);
   background: getcolor('green.lighten2');
