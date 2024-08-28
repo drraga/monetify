@@ -5,7 +5,7 @@ import { storeToRefs } from 'pinia'
 import { useExpensesStore } from '@/stores/expenses'
 const expensesStore = useExpensesStore()
 const { selectedTransactionIds } = storeToRefs(expensesStore)
-const { deleteTransactions } = expensesStore
+const { deleteTransactions, addTransaction } = expensesStore
 
 import CardAccount from '@/components/CardAccount.vue'
 import ButtonExpenseControl from '@/components/ButtonExpenseControl.vue'
@@ -34,27 +34,27 @@ const sidePaneElements = [
 
 const modalInputFields = [
   {
-    fieldName: 'Merchant',
+    fieldName: 'merchant',
     textType: 'text',
     isRequired: true
   },
   {
-    fieldName: 'Date',
+    fieldName: 'date',
     textType: 'date',
     isRequired: true
   },
   {
-    fieldName: 'Amount',
+    fieldName: 'amount',
     textType: 'number',
     isRequired: true
   },
   {
-    fieldName: 'Category',
+    fieldName: 'category',
     textType: 'text',
     isRequired: false
   },
   {
-    fieldName: 'Description',
+    fieldName: 'description',
     textType: 'text',
     isRequired: false
   }
@@ -72,7 +72,7 @@ const totalBalance = ref({
   currency: 'RUB'
 })
 
-const expenses = ref([
+const expenseTransaction = ref([
   {
     date: '',
     merchantName: '5',
@@ -124,6 +124,7 @@ const expenses = ref([
         <Teleport to="body">
           <ModalTransaction
             @close-dialog="(value: boolean) => (isModalOpen = value)"
+            @transaction-submitted="(value: Transaction) => addTransaction(value)"
             :input-fields="modalInputFields"
             :show-dialog="isModalOpen"
           >

@@ -52,7 +52,8 @@ const handleSelectAll = () => {
           </label>
 
           <td v-for="(section, j) in tableHeaders" :key="j" :data-column-name="section">
-            {{ transaction[section] }} <span v-if="section === 'amount'">₽</span>
+            {{ transaction[section as transactionInputFields] }}
+            <span v-if="section === 'amount'">₽</span>
           </td>
         </tr>
       </template>
@@ -75,11 +76,7 @@ table {
     display: grid;
     padding: pxtorem(6) pxtorem(10);
     gap: pxtorem(6);
-
-    // grid-template-columns: repeat(5, 1fr);
     grid-template-columns: pxtorem(22) pxtorem(120) repeat(4, 1fr);
-
-    // grid-template-columns: 120px 2fr 0.5fr 0.5fr 1fr;
 
     & [data-column-name='amount'] {
       text-align: end;
@@ -97,6 +94,7 @@ table {
     & > tr {
       border-right: 4px solid getcolor('green.base');
       background-color: #fff;
+      box-shadow: 5px 5px 5px -5px rgb(34 60 80 / 60%);
       transition: opacity 0.25s ease-in-out;
 
       &.is-expence {

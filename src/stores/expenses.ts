@@ -1,23 +1,7 @@
 import { defineStore } from 'pinia'
 
 interface ExpensesStore {
-  transactionHistory: {
-    id: string
-    /** Date of transaction */
-    date: string
-    /** Source of income or Seller name */
-    merchant?: string
-    /** Amount of earning or spending */
-    amount: number
-    /** Short category */
-    category?: string
-    /** Long description */
-    description?: string
-    /** Selection to delete flag */
-    isSelected: boolean
-    /** Income or expense  flag*/
-    isExpense: boolean
-  }[]
+  transactionHistory: Transaction[]
 
   selectedTransactionIds: string[]
 
@@ -33,7 +17,7 @@ export const useExpensesStore = defineStore('expenses', {
         merchant: '5',
         amount: -130,
         category: 'Food',
-        description: 'coffe',
+        description: 'coffe with friends',
         isSelected: false,
         isExpense: true
       },
@@ -66,36 +50,48 @@ export const useExpensesStore = defineStore('expenses', {
     getSelectedTransactionIds: (state) => state.selectedTransactionIds,
     getAllExpencesAmount: (state) =>
       state.transactionHistory.reduce(
-        (acc, transaction) => (transaction.isExpense ? (acc += transaction.amount) : (acc += 0)),
+        (acc, transaction) =>
+          transaction.isExpense && transaction.amount ? (acc += transaction.amount) : (acc += 0),
         0
       ),
     getAllIncome: (state) =>
       state.transactionHistory.reduce(
-        (acc, transaction) => (!transaction.isExpense ? (acc += transaction.amount) : (acc += 0)),
+        (acc, transaction) =>
+          !transaction.isExpense && transaction.amount ? (acc += transaction.amount) : (acc += 0),
         0
       ),
     getAllBalance: (state) =>
-      state.transactionHistory.reduce((acc, transaction) => (acc += transaction.amount), 0)
+      state.transactionHistory.reduce(
+        (acc, transaction) => (transaction.amount ? (acc += transaction.amount) : (acc += 0)),
+        0
+      )
   },
 
   actions: {
     deleteTransactions() {
       if (this.selectedTransactionIds.length) {
-        this.transactionHistory = this.transactionHistory.filter(
-          (transaction) => this.selectedTransactionIds.indexOf(transaction.id) === -1
-        )
+        this.transactionHistory = this.transactionHistory.filter((transaction) => {
+          if (transaction.id) {
+            return this.selectedTransactionIds.indexOf(transaction.id) === -1
+          }
+        })
       }
       this.selectedTransactionIds.length = 0
 
       this.isAllTransactionsSelected = false
     },
     selectAllTransactions() {
-      this.transactionHistory.forEach((transaction) =>
-        this.selectedTransactionIds.push(transaction.id)
-      )
+      this.transactionHistory.forEach((transaction) => {
+        if (transaction.id) {
+          return this.selectedTransactionIds.push(transaction.id)
+        }
+      })
     },
     clearAllTransactionsSelection() {
       this.selectedTransactionIds.length = 0
+    },
+    addTransaction(transaction: Transaction) {
+      this.transactionHistory.push(transaction)
     }
   }
 })

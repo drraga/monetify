@@ -1,4 +1,11 @@
 <script setup lang="ts">
+import { ref } from 'vue'
+
+import { nanoid } from 'nanoid'
+
+import { useToast } from 'vue-toastification'
+const toast = useToast()
+
 const props = defineProps<{
   inputFields: {
     fieldName: string
@@ -14,17 +21,64 @@ import ButtonExpenseControl from '@/components/ButtonExpenseControl.vue'
 
 const emit = defineEmits<{
   closeDialog: [value: boolean]
+  transactionSubmitted: [value: Transaction]
 }>()
 
 const closeDialog = () => {
   emit('closeDialog', false)
+}
+
+const assembleTransaction = () => {
+  return {
+    id: nanoid(),
+    date: transactionInputFields.value.date,
+    merchant: transactionInputFields.value.merchant.trim(),
+    amount: Number(transactionInputFields.value.amount),
+    category: (transactionInputFields.value.category || '').trim(),
+    description: (transactionInputFields.value.description || '').trim(),
+    isSelected: false,
+    isExpense: Number(transactionInputFields.value.amount) < 0
+  }
+}
+
+const transactionInputFields = ref<Transaction>({
+  date: '',
+  merchant: '',
+  amount: null,
+  category: '',
+  description: ''
+})
+
+const clearTransactionInputFields = () => {
+  transactionInputFields.value.date = ''
+  transactionInputFields.value.merchant = ''
+  transactionInputFields.value.amount = null
+  transactionInputFields.value.category = ''
+  transactionInputFields.value.description = ''
+}
+
+const onSubmit = () => {
+  if (
+    !transactionInputFields.value.date ||
+    !transactionInputFields.value.merchant ||
+    !transactionInputFields.value.amount
+  ) {
+    toast.error('Date, merchant & amount fields to be filled')
+    return
+  } else {
+    assembleTransaction()
+    emit('transactionSubmitted', assembleTransaction())
+    toast.success('Expense created')
+    closeDialog()
+    clearTransactionInputFields()
+  }
 }
 </script>
 <template>
   <div class="dialog">
     <Transition :duration="550" name="dialog">
       <section v-if="showDialog" class="dialog-wrapper">
-        <form>
+        <form @submit.prevent="onSubmit">
           <fieldset>
             <div class="dialog-wrapper__close" @click="closeDialog()">
               <ButtonActions />
@@ -40,12 +94,15 @@ const closeDialog = () => {
                   :text-label="input.fieldName"
                   :text-type="input.textType"
                   :is-required="input.isRequired"
+                  v-model:inputValue="
+                    transactionInputFields[input.fieldName as transactionInputFields]
+                  "
                 />
               </template>
             </p>
           </fieldset>
 
-          <div class="dialog-wrapper__save" @click="$emit('closeDialog', false)">
+          <div class="dialog-wrapper__save">
             <ButtonExpenseControl button-text="Save" />
           </div>
         </form>

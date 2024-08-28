@@ -1,22 +1,16 @@
 <script setup lang="ts">
-import { ref } from 'vue'
-
 const props = defineProps<{
   textLabel: string
   textType: string
   isRequired: boolean
+  inputValue: string | number | null
 }>()
 
-const inputValue = ref('')
+const inputVal = defineModel('inputValue')
 </script>
 <template>
   <p class="float-input">
-    <input
-      :id="props.textLabel"
-      :type="$props.textType"
-      :required="props.isRequired"
-      v-model="inputValue"
-    />
+    <input :id="props.textLabel" :type="$props.textType" v-model="inputVal" />
     <label :class="{ required: props.isRequired, top: inputValue }">{{ props.textLabel }}</label>
   </p>
 </template>
