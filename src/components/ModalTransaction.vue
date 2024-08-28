@@ -1,5 +1,10 @@
 <script setup lang="ts">
 import { ref } from 'vue'
+import { vOnClickOutside } from '@vueuse/components'
+
+import InputFloat from '@/components/InputFloat.vue'
+import ButtonActions from '@/components/ButtonActions.vue'
+import ButtonExpenseControl from '@/components/ButtonExpenseControl.vue'
 
 import { nanoid } from 'nanoid'
 
@@ -15,10 +20,6 @@ const props = defineProps<{
   showDialog: boolean
 }>()
 
-import InputFloat from '@/components/InputFloat.vue'
-import ButtonActions from '@/components/ButtonActions.vue'
-import ButtonExpenseControl from '@/components/ButtonExpenseControl.vue'
-
 const emit = defineEmits<{
   closeDialog: [value: boolean]
   transactionSubmitted: [value: Transaction]
@@ -26,6 +27,7 @@ const emit = defineEmits<{
 
 const closeDialog = () => {
   emit('closeDialog', false)
+  clearTransactionInputFields()
 }
 
 const assembleTransaction = () => {
@@ -69,7 +71,6 @@ const onSubmit = () => {
     assembleTransaction()
     emit('transactionSubmitted', assembleTransaction())
     closeDialog()
-    clearTransactionInputFields()
   }
 }
 </script>
@@ -77,7 +78,7 @@ const onSubmit = () => {
   <div class="dialog">
     <Transition :duration="550" name="dialog">
       <section v-if="showDialog" class="dialog-wrapper">
-        <form @submit.prevent="onSubmit">
+        <form @submit.prevent="onSubmit" v-on-click-outside="closeDialog">
           <fieldset>
             <div class="dialog-wrapper__close" @click="closeDialog()">
               <ButtonActions />
