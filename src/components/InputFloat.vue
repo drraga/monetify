@@ -31,6 +31,7 @@ const inputVal = defineModel('inputValue')
     color: getcolor('grey.darken1');
     font-size: pxtorem(14);
     pointer-events: none;
+    text-transform: capitalize;
     transform: translateY(-50%);
     transition: all 0.25s ease;
 

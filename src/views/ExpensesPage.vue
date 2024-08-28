@@ -61,27 +61,6 @@ const modalInputFields = [
 ]
 
 const isModalOpen = ref(false)
-
-const currencies = {
-  RUB: '₽',
-  USD: '$'
-}
-
-const totalBalance = ref({
-  amount: 200000,
-  currency: 'RUB'
-})
-
-const expenseTransaction = ref([
-  {
-    date: '',
-    merchantName: '5',
-    amount: 300,
-    currency: 'RUB',
-    category: '',
-    description: ''
-  }
-])
 </script>
 
 <template>

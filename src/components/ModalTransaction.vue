@@ -68,7 +68,6 @@ const onSubmit = () => {
   } else {
     assembleTransaction()
     emit('transactionSubmitted', assembleTransaction())
-    toast.success('Expense created')
     closeDialog()
     clearTransactionInputFields()
   }

@@ -1,4 +1,6 @@
 import { defineStore } from 'pinia'
+import { useToast } from 'vue-toastification'
+const toast = useToast()
 
 interface ExpensesStore {
   transactionHistory: Transaction[]
@@ -46,7 +48,9 @@ export const useExpensesStore = defineStore('expenses', {
   }),
 
   getters: {
-    getTransactionHistory: (state) => state.transactionHistory,
+    getTransactionHistory: (state) => {
+      return state.transactionHistory
+    },
     getSelectedTransactionIds: (state) => state.selectedTransactionIds,
     getAllExpencesAmount: (state) =>
       state.transactionHistory.reduce(
@@ -68,6 +72,18 @@ export const useExpensesStore = defineStore('expenses', {
   },
 
   actions: {
+    saveTransactionsToLocalStorage() {
+      localStorage.setItem('transactionHistory', JSON.stringify(this.transactionHistory))
+    },
+    loadFromLocalStorage() {
+      const localStorageHistory = localStorage.getItem('transactionHistory')
+      // localStorage is empty array only
+      const regexp = /^\[\]$/
+      if (localStorageHistory && !regexp.test(localStorageHistory)) {
+        // if localStorage not only empty array
+        this.transactionHistory = JSON.parse(localStorageHistory)
+      }
+    },
     deleteTransactions() {
       if (this.selectedTransactionIds.length) {
         this.transactionHistory = this.transactionHistory.filter((transaction) => {
@@ -76,7 +92,14 @@ export const useExpensesStore = defineStore('expenses', {
           }
         })
       }
+
+      this.selectedTransactionIds.length > 1
+        ? toast.success('Selected transactions deleted')
+        : toast.success('Selected transaction deleted')
+
       this.selectedTransactionIds.length = 0
+
+      this.saveTransactionsToLocalStorage()
 
       this.isAllTransactionsSelected = false
     },
@@ -92,6 +115,8 @@ export const useExpensesStore = defineStore('expenses', {
     },
     addTransaction(transaction: Transaction) {
       this.transactionHistory.push(transaction)
+      this.saveTransactionsToLocalStorage()
+      toast.success('Transaction created')
     }
   }
 })
