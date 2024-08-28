@@ -1,6 +1,5 @@
 # monetify
-
-This template should help get you started developing with Vue 3 in Vite.
+App which allow to track personal expences based on Vue3 and Vite bundler.
 
 ## Recommended IDE Setup
 
