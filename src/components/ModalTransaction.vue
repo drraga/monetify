@@ -75,7 +75,13 @@ const onSubmit = () => {
 }
 </script>
 <template>
-  <div class="dialog">
+  <div
+    class="dialog"
+    role="dialog"
+    aria-modal="true"
+    aria-label="New transaction"
+    aria-describedby="Enter new transaction"
+  >
     <Transition :duration="550" name="dialog">
       <section v-if="showDialog" class="dialog-wrapper">
         <form @submit.prevent="onSubmit" v-on-click-outside="closeDialog">
