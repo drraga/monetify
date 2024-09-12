@@ -1,9 +1,25 @@
 <script setup lang="ts">
-import { ref } from 'vue'
+import { ref, computed } from 'vue'
 import { vOnClickOutside } from '@vueuse/components'
 
+import {
+  object,
+  string,
+  number,
+  trim,
+  pipe,
+  optional,
+  boolean,
+  nonEmpty,
+  isoDate,
+  safeParse,
+  transform,
+  union,
+  type InferOutput
+} from 'valibot'
+
 import InputFloat from '@/components/InputFloat.vue'
-import ButtonActions from '@/components/ButtonActions.vue'
+import VModal from '@/components/VModal.vue'
 import ButtonExpenseControl from '@/components/ButtonExpenseControl.vue'
 
 import { nanoid } from 'nanoid'
@@ -11,12 +27,21 @@ import { nanoid } from 'nanoid'
 import { useToast } from 'vue-toastification'
 const toast = useToast()
 
+const SchemaTransaction = object({
+  id: optional(string()),
+  merchant: pipe(string(), nonEmpty('Enter merchant'), trim()),
+  date: pipe(string(), nonEmpty('Enter date'), isoDate('Incorrect date format')),
+  amount: pipe(string(), nonEmpty('Enter amount'), trim()),
+  category: pipe(string(), trim()),
+  description: pipe(string(), trim()),
+  isSelected: optional(boolean()),
+  isExpense: optional(boolean())
+})
+
+type Transaction = InferOutput<typeof SchemaTransaction>
+
 const props = defineProps<{
-  inputFields: {
-    fieldName: string
-    textType: string
-    isRequired: boolean
-  }[]
+  formContent: TransactionInputEntity[]
   showDialog: boolean
 }>()
 
@@ -30,171 +55,140 @@ const closeDialog = () => {
   clearTransactionInputFields()
 }
 
-const assembleTransaction = () => {
+const assembleTransaction = (validatedInputFields: Transaction): Transaction => {
   return {
     id: nanoid(),
-    date: transactionInputFields.value.date,
+    ...validatedInputFields
+  }
+}
+
+const assembleValuesFromInputs = computed<Transaction>(() => {
+  const amountDecimalTransformed =
+    !isNaN(Number(transactionInputFields.value.amount)) &&
+    String(transactionInputFields.value.amount).trim() !== ''
+      ? String(Math.round(Number(transactionInputFields.value.amount) * 100) / 100)
+      : ''
+
+  return {
     merchant: transactionInputFields.value.merchant.trim(),
-    amount: Number(transactionInputFields.value.amount),
+    date: transactionInputFields.value.date,
+    amount: amountDecimalTransformed,
     category: (transactionInputFields.value.category || '').trim(),
     description: (transactionInputFields.value.description || '').trim(),
     isSelected: false,
     isExpense: Number(transactionInputFields.value.amount) < 0
   }
-}
+})
 
 const transactionInputFields = ref<Transaction>({
-  date: '',
   merchant: '',
-  amount: null,
+  date: '',
+  amount: '',
   category: '',
   description: ''
 })
 
+const errorMessagesForInput = computed<ValidationErrors>(() => {
+  const resultObject: ValidationErrors = {} as ValidationErrors
+  const resultParse = safeParse(SchemaTransaction, assembleValuesFromInputs.value)
+
+  if (!resultParse.success) {
+    resultParse.issues.forEach((el) => {
+      const inputFieldName = el.path?.[0]?.key as TransactionInputFieldName
+      const errorMessage = el.message
+
+      ;(resultObject[inputFieldName] ??= []).push(errorMessage)
+    })
+  }
+
+  return resultObject
+})
+
 const clearTransactionInputFields = () => {
-  transactionInputFields.value.date = ''
   transactionInputFields.value.merchant = ''
-  transactionInputFields.value.amount = null
+  transactionInputFields.value.date = ''
+  transactionInputFields.value.amount = ''
   transactionInputFields.value.category = ''
   transactionInputFields.value.description = ''
 }
 
 const onSubmit = () => {
-  if (
-    !transactionInputFields.value.date ||
-    !transactionInputFields.value.merchant ||
-    !transactionInputFields.value.amount
-  ) {
-    toast.error('Date, merchant & amount fields to be filled')
+  const resultParse = safeParse(SchemaTransaction, assembleValuesFromInputs.value)
+
+  if (!resultParse.success) {
+    toast.error('Fields with * are compulsory')
     return
   } else {
-    assembleTransaction()
-    emit('transactionSubmitted', assembleTransaction())
+    emit('transactionSubmitted', assembleTransaction(resultParse.output))
     closeDialog()
   }
 }
 </script>
+
 <template>
-  <div
-    class="dialog"
-    role="dialog"
-    aria-modal="true"
-    aria-label="New transaction"
-    aria-describedby="Enter new transaction"
-  >
-    <Transition :duration="550" name="dialog">
-      <section v-if="showDialog" class="dialog-wrapper">
-        <form @submit.prevent="onSubmit" v-on-click-outside="closeDialog">
-          <fieldset>
-            <div class="dialog-wrapper__close" @click="closeDialog()">
-              <ButtonActions />
-            </div>
+  <VModal @close="() => closeDialog()">
+    <form
+      @submit.prevent="onSubmit"
+      v-on-click-outside="closeDialog"
+      aria-label="New transaction"
+      aria-describedby="Enter new transaction"
+      class="transaction"
+    >
+      <fieldset class="transaction__group">
+        <legend>Expenses</legend>
 
-            <legend>
-              <slot name="header">Default header</slot>
-            </legend>
+        <p class="transaction__group-inputs">
+          <template v-for="(input, indx) in props.formContent" :key="input.fieldName">
+            <InputFloat
+              :input-content="input"
+              :is-autofocused="indx === 0"
+              v-model:inputValue="
+                transactionInputFields[input.fieldName as TransactionInputFieldName]
+              "
+            >
+              <template #error-message>{{
+                errorMessagesForInput?.[input.fieldName as TransactionInputFieldName]?.[0]
+              }}</template>
+            </InputFloat>
+          </template>
+        </p>
+      </fieldset>
 
-            <p class="dialog-wrapper__group">
-              <template v-for="input in props.inputFields" :key="input.filedName">
-                <InputFloat
-                  :text-label="input.fieldName"
-                  :text-type="input.textType"
-                  :is-required="input.isRequired"
-                  v-model:inputValue="
-                    transactionInputFields[input.fieldName as transactionInputFields]
-                  "
-                />
-              </template>
-            </p>
-          </fieldset>
-
-          <div class="dialog-wrapper__save">
-            <ButtonExpenseControl button-text="Save" />
-          </div>
-        </form>
-      </section>
-    </Transition>
-  </div>
+      <div class="transaction__save">
+        <ButtonExpenseControl button-text="Save" />
+      </div>
+    </form>
+  </VModal>
 </template>
 
 <style lang="scss">
 @import '@/assets/styles/_mixins';
 @import '@/assets/styles/_variables';
 
-.dialog {
-  & .dialog-wrapper {
-    position: fixed;
-    z-index: 2;
-    display: flex;
-    height: 100vh;
-    align-items: center;
-    justify-content: center;
-    background: rgb(0 0 0 / 50%);
-    inset: 0;
+.transaction {
+  position: relative;
+  padding: 3rem;
+  border-radius: 0.5rem;
+  background-color: #fff;
 
-    form {
-      position: relative;
-      padding: 1rem 5rem;
-      border-radius: 0.5rem;
-      background-color: #fff;
-    }
-
-    &__close {
-      position: absolute;
-      top: 0;
-      right: 0;
-      padding: pxtorem(5);
-    }
+  &__group {
+    margin: 0 0 1.5rem;
 
     & legend {
       margin-bottom: pxtorem(22);
       font-size: pxtorem(22);
       font-weight: 600;
     }
-
-    &__group {
-      display: grid;
-      margin-bottom: pxtorem(20);
-      gap: 1.5rem;
-    }
-
-    &__save {
-      float: right;
-    }
   }
 
-  & .dialog-enter-from,
-  & .dialog-leave-to {
-    opacity: 0;
+  &__group-inputs {
+    display: grid;
+    gap: 2rem;
   }
 
-  & .dialog-enter-from form,
-  & .dialog-leave-to form {
-    opacity: 0;
-    transform: translateY(-40px);
-    transition:
-      opacity 0.3s ease,
-      transform 0.3s ease;
-  }
-
-  & .dialog-enter-active form,
-  & .dialog-leave-active form {
-    transition:
-      opacity 0.3s ease,
-      transform 0.3s ease;
-  }
-
-  & .dialog-enter-active form {
-    transition-delay: 0.25s;
-  }
-
-  & .dialog-enter-active,
-  & .dialog-leave-active {
-    transition: opacity 0.3s ease;
-  }
-
-  & .dialog-leave-active {
-    transition-delay: 0.5s;
+  &__save {
+    display: flex;
+    justify-content: flex-end;
   }
 }
 </style>

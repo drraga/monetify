@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { ref } from 'vue'
+import { ref, provide } from 'vue'
 
 import { storeToRefs } from 'pinia'
 import { useExpensesStore } from '@/stores/expenses'
@@ -32,42 +32,75 @@ const sidePaneElements = [
   }
 ]
 
-const modalInputFields = [
+const modalInputFields: TransactionInputEntity[] = [
   {
     fieldName: 'merchant',
     textType: 'text',
+    label: 'merchant',
+    placeholder: '',
+    errorMessage: null,
+    pattern: null,
+    minLength: 1,
+    maxLength: null,
     isRequired: true
   },
   {
     fieldName: 'date',
     textType: 'date',
+    label: 'date',
+    placeholder: '',
+    errorMessage: 'Enter date',
+    pattern: null,
+    // pattern: /^\d{4}-(0[1-9]|1[0-2])-(0[1-9]|1[0-9]|2[0-9]|3[0-1])$/,
+    minLength: null,
+    maxLength: null,
     isRequired: true
   },
   {
     fieldName: 'amount',
-    textType: 'number',
+    textType: 'text',
+    label: 'amount',
+    placeholder: '',
+    errorMessage: 'Format (+/-)0(.00)',
+    pattern: null,
+    // pattern: /^[+-]?\d+(\.\d{0,2})?$/,
+    minLength: 1,
+    maxLength: null,
     isRequired: true
   },
   {
     fieldName: 'category',
     textType: 'text',
+    label: 'category',
+    placeholder: '',
+    errorMessage: null,
+    pattern: null,
+    minLength: null,
+    maxLength: null,
     isRequired: false
   },
   {
     fieldName: 'description',
     textType: 'text',
+    label: 'description',
+    placeholder: '',
+    errorMessage: null,
+    pattern: null,
+    minLength: null,
+    maxLength: null,
     isRequired: false
   }
 ]
 
 const isModalOpen = ref(false)
+provide('showModal', isModalOpen)
 </script>
 
 <template>
   <div class="expense">
     <div class="sidepane">
       <div class="sidepane__header">
-        <p>user name</p>
+        <p>User name</p>
       </div>
 
       <nav class="sidepane__nav">
@@ -104,11 +137,9 @@ const isModalOpen = ref(false)
           <ModalTransaction
             @close-dialog="(value: boolean) => (isModalOpen = value)"
             @transaction-submitted="(value: Transaction) => addTransaction(value)"
-            :input-fields="modalInputFields"
+            :form-content="modalInputFields"
             :show-dialog="isModalOpen"
-          >
-            <template #header> Expenses </template>
-          </ModalTransaction>
+          />
         </Teleport>
 
         <div class="accounts-total">

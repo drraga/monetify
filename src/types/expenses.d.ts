@@ -1,11 +1,11 @@
 interface Transaction {
   id?: string
-  /** Date of transaction */
-  date: string
   /** Source of income or Seller name */
   merchant: string
+  /** Date of transaction */
+  date: string
   /** Amount of earning or spending */
-  amount: number | null
+  amount: string | number
   /** Short category */
   category?: string
   /** Long description */
@@ -16,5 +16,20 @@ interface Transaction {
   isExpense?: boolean
 }
 
-/** Поля input ля ввода транзакций */
-type transactionInputFields = 'date' | 'merchant' | 'amount' | 'category' | 'description'
+interface TransactionInputEntity {
+  fieldName: string
+  textType: string
+  label: string
+  placeholder: string
+  errorMessage: string | null
+  pattern: RegExp | null
+  minLength: number | null
+  maxLength: number | null
+  isRequired: boolean
+}
+
+/** Transaction input fields naming */
+type TransactionInputFieldName = 'date' | 'merchant' | 'amount' | 'category' | 'description'
+
+/** Error messages */
+type ValidationErrors = Record<TransactionInputFieldName, string[]>

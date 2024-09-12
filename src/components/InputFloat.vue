@@ -1,17 +1,57 @@
 <script setup lang="ts">
+import { onMounted, ref } from 'vue'
+
 const props = defineProps<{
-  textLabel: string
-  textType: string
-  isRequired: boolean
-  inputValue: string | number | null
+  inputContent: TransactionInputEntity
+  isAutofocused: boolean
 }>()
 
+const isFieldValidating = ref(false) // flag to show errors only after blur or input
+
+const inputContent = props.inputContent
 const inputVal = defineModel('inputValue')
+
+const inputField = ref<HTMLInputElement | null>(null)
+
+const localError = ref('')
+
+const focusInput = () => {
+  if (props.isAutofocused && inputField.value) {
+    inputField.value.focus() // Set focus on 1st input
+  }
+}
+
+onMounted(() => {
+  focusInput()
+  isFieldValidating.value = false // Reset state of error msg display
+})
 </script>
 <template>
   <p class="float-input">
-    <input :id="props.textLabel" :type="$props.textType" v-model="inputVal" />
-    <label :class="{ required: props.isRequired, top: inputValue }">{{ props.textLabel }}</label>
+    <label :class="{ required: inputContent.isRequired, top: inputValue }">{{
+      inputContent.label
+    }}</label>
+
+    <input
+      ref="inputField"
+      v-model="inputVal"
+      :class="{ required: inputContent.isRequired, 'have-error': !!localError }"
+      :id="inputContent.label"
+      :type="inputContent.textType"
+      :area-describedby="`${inputContent.label}-validation`"
+      @blur="isFieldValidating = true"
+      @input="isFieldValidating = true"
+    />
+    <!-- :step="inputContent.textType === 'number' ? 0.01 : ''" -->
+
+    <span
+      v-if="isFieldValidating"
+      :id="`${inputContent.label}-validation`"
+      class="float-input__validation-msg"
+      aria-live="assertive"
+    >
+      <slot name="error-message">{{ localError }}</slot>
+    </span>
   </p>
 </template>
 
@@ -47,6 +87,18 @@ const inputVal = defineModel('inputValue')
     }
   }
 
+  &:has(input:focus) label {
+    /* style label when input focused */
+    top: -0.75rem;
+    color: getcolor('black.lighten1');
+    font-size: 12px;
+  }
+
+  &:has(input[type='date']) label {
+    top: -0.75rem;
+    font-size: pxtorem(12);
+  }
+
   & input {
     width: 100%;
     padding: 0.5rem;
@@ -57,19 +109,19 @@ const inputVal = defineModel('inputValue')
 
     &:focus {
       border: solid 1px getcolor('black.lighten1');
-
-      & + label {
-        top: -0.75rem;
-        font-size: pxtorem(12);
-      }
     }
 
-    &[type='date'] {
-      & + label {
-        top: -0.75rem;
-        font-size: pxtorem(12);
-      }
+    &.have-error {
+      border: solid 1px getcolor('red.lighten1');
     }
+  }
+
+  &__validation-msg {
+    position: absolute;
+    right: 0.75rem;
+    bottom: -1.2rem;
+    color: getcolor('red.lighten1');
+    font-size: pxtorem(13);
   }
 }
 </style>

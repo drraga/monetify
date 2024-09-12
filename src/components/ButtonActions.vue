@@ -17,7 +17,10 @@
 @import '@/assets/styles/_variables';
 
 .button-action {
-  padding: pxtorem(3);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 0.7rem;
   cursor: pointer;
 
   & svg {
