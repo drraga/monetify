@@ -53,10 +53,8 @@ const emit = defineEmits(['close'])
     opacity: 0;
   }
 
-  & .dialog-enter-from form,
-  & .dialog-leave-to form,
-  & .dialog-enter-from .dialog-wrapper__close,
-  & .dialog-leave-to .dialog-wrapper__close {
+  & .dialog-enter-from .dialog-wrapper,
+  & .dialog-leave-to .dialog-wrapper {
     opacity: 0;
     transform: translateY(-40px);
     transition:
@@ -64,17 +62,14 @@ const emit = defineEmits(['close'])
       transform 0.3s ease;
   }
 
-  & .dialog-enter-active form,
-  & .dialog-leave-active form,
-  & .dialog-enter-active .dialog-wrapper__close,
-  & .dialog-leave-active .dialog-wrapper__close {
+  & .dialog-enter-active .dialog-wrapper,
+  & .dialog-leave-active .dialog-wrapper {
     transition:
       opacity 0.3s ease,
       transform 0.3s ease;
   }
 
-  & .dialog-enter-active form,
-  & .dialog-enter-active .dialog-wrapper__close {
+  & .dialog-enter-active .dialog-wrapper {
     transition-delay: 0.25s;
   }
 
