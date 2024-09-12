@@ -5,7 +5,6 @@ import { vOnClickOutside } from '@vueuse/components'
 import {
   object,
   string,
-  number,
   trim,
   pipe,
   optional,
@@ -13,8 +12,6 @@ import {
   nonEmpty,
   isoDate,
   safeParse,
-  transform,
-  union,
   type InferOutput
 } from 'valibot'
 
